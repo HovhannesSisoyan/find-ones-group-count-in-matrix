@@ -28,34 +28,23 @@ const findRooms = (M) => {
       } 
     }
   }
-  console.log(eachRowGropusCount);
-  console.log(eachRowGroupIndexies);
   let count = 0;
-  for (let i = 0; i < m -1; i ++) {
+  for (let i = 0; i < m - 1; i ++) {
     for (let j = 0; j < eachRowGroupIndexies[i].length; j ++) {
       for (let k = 0; k < eachRowGroupIndexies[i][j].length; k++) {
-        includes(eachRowGroupIndexies[i+1], eachRowGroupIndexies[i][j][k]);
-        count ++
+        if (includes(eachRowGroupIndexies[i+1], eachRowGroupIndexies[i][j][k])) count ++;
       }
     }
   }
-  console.log(`count = ${count}`)
+  return Object.values(eachRowGropusCount).reduce((acc, element) => acc + element, 0) - count;
 }
 
 const matrix = [
   [1,0,1,0,1,0],
   [1,1,0,1,1,0],
   [0,0,1,0,0,1],
-  [1,1,1,0,1,1],
+  [1,0,1,0,1,1],
 ];
 
-const printMatrix = M => {
-  for (let i = 0; i < M.length; i ++) {
-    for (let j = 0; j < M[0].length; j ++) {
-      console.log(`${M[i][j]} `)
-    }
-    console.log('\n');
-  }
-}
 
-findRooms(matrix);
+console.log(findRooms(matrix));
