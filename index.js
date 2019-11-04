@@ -1,25 +1,29 @@
-const findRooms = (M) => {
-  const m = M.length;     //matrix has m rows 
-  const n = M[0].length;  //matrix has n columns
+const findOnesGroupsCount = (M) => {
+  const m = M.length;
+  const n = M[0].length;
 
-  const includes = (arrayOfArrays, element) => {
-    arr = [];
-    arrayOfArrays.forEach(array => {
-      arr = [...arr, ...array];
-    })
-    if (arr.includes(element)) return true; else return false;
+  const findVericalNeighboursCount = (array, arrayOfArrays) => {
+    let count = 0;
+    for (let i = 0; i < arrayOfArrays.length; i ++) {
+      for(let j = 0; j < arrayOfArrays[i].length; j ++) {
+        if (array.includes(arrayOfArrays[i][j])) {
+          count ++;
+          break;
+        }
+      }
+    }
+    return count; 
   }
 
   const eachRowGroupIndexies = {};
-  const eachRowGropusCount = {};
+  let onesGroupsCountForRows = 0;
   for (let i = 0; i < m; i ++) {
     eachRowGroupIndexies[i] = [];
-    eachRowGropusCount[i] = 0;
     for (let j = 0; j < n; j ++) {
       if (M[i][j] === 1) {
         let a = [];
         a.push(j)
-        eachRowGropusCount[i] ++;
+        onesGroupsCountForRows ++;
         while(M[i][j + 1] === 1) {
           j++;
           a.push(j);
@@ -28,23 +32,22 @@ const findRooms = (M) => {
       } 
     }
   }
-  let count = 0;
+
+  let verticalGroups = 0;
   for (let i = 0; i < m - 1; i ++) {
     for (let j = 0; j < eachRowGroupIndexies[i].length; j ++) {
-      for (let k = 0; k < eachRowGroupIndexies[i][j].length; k++) {
-        if (includes(eachRowGroupIndexies[i+1], eachRowGroupIndexies[i][j][k])) count ++;
-      }
+      verticalGroups += findVericalNeighboursCount(eachRowGroupIndexies[i][j], eachRowGroupIndexies[i+1]);
     }
   }
-  return Object.values(eachRowGropusCount).reduce((acc, element) => acc + element, 0) - count;
+  return onesGroupsCountForRows - verticalGroups;
 }
 
 const matrix = [
   [1,0,1,0,1,0],
-  [1,1,0,1,1,0],
-  [0,0,1,0,0,1],
-  [1,0,1,0,1,1],
+  [1,0,0,1,0,0],
+  [0,1,0,0,1,1],
+  [1,1,1,0,1,1],
 ];
 
 
-console.log(findRooms(matrix));
+console.log(findOnesGroupsCount(matrix));
